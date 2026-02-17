@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: betserver
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
