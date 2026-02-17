@@ -7,7 +7,8 @@ app.use(cors());
 
 const PORT = process.env.PORT;
 
-const API_KEY = "04fca872796041aca478c439502c2016";
+const API_KEY = process.env.FOOTBALL_API_KEY;
+
 
 app.get("/", (req, res) => {
   res.send("Server attivo");
@@ -44,3 +45,4 @@ app.get("/matches", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log("Server avviato"));
+
