@@ -1,7 +1,9 @@
 const express = require("express");
+const cors = require("cors");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT || 10000;
 
 const API_KEY = "04fca872796041aca478c439502c2016";
@@ -38,3 +40,4 @@ app.get("/matches", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log("Server avviato"));
+
