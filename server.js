@@ -1,5 +1,4 @@
 const express = require("express");
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -17,7 +16,9 @@ app.get("/matches", async (req, res) => {
 
       const response = await fetch(
         `https://api.football-data.org/v4/competitions/${code}/matches?status=SCHEDULED`,
-        { headers: { "X-Auth-Token": API_KEY } }
+        {
+          headers: { "X-Auth-Token": API_KEY }
+        }
       );
 
       const data = await response.json();
@@ -42,3 +43,4 @@ app.get("/matches", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log("Server avviato"));
+
