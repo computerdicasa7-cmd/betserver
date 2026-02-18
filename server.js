@@ -6,16 +6,14 @@ const PORT = process.env.PORT || 10000;
 
 const API_KEY = process.env.FOOTBALL_API_KEY;
 
-// competizioni gratuite disponibili
-const leagues = ["SA", "PL", "PD", "BL1", "FL1"]; 
-// Serie A, Premier League, Liga, Bundesliga, Ligue 1
+const leagues = ["SA","PL","PD","BL1","FL1"];
 
 app.get("/matches", async (req, res) => {
   try {
 
     let allMatches = [];
 
-    for (let code of leagues) {
+    for (const code of leagues) {
 
       const response = await fetch(
         `https://api.football-data.org/v4/competitions/${code}/matches?status=SCHEDULED`,
@@ -26,24 +24,21 @@ app.get("/matches", async (req, res) => {
 
       if (!data.matches) continue;
 
-      data.matches.forEach(m => {
-
+      for (const m of data.matches) {
         allMatches.push({
           home: m.homeTeam.name,
           away: m.awayTeam.name,
           homeXG: 1.2 + Math.random()*1.2,
           awayXG: 0.9 + Math.random()*1.0
         });
-
-      });
+      }
     }
 
     res.json(allMatches);
 
-  } catch (e) {
+  } catch (err) {
     res.json([]);
   }
 });
 
 app.listen(PORT, () => console.log("Server avviato"));
-
