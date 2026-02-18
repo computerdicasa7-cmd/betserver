@@ -1,45 +1,46 @@
 const express = require("express");
-const cors = require("cors");
-const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
-app.use(cors());
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 10000;
 
 const API_KEY = process.env.FOOTBALL_API_KEY;
 
-
-app.get("/", (req, res) => {
-  res.send("Server attivo");
-});
+// competizioni gratuite disponibili
+const leagues = ["SA", "PL", "PD", "BL1", "FL1"]; 
+// Serie A, Premier League, Liga, Bundesliga, Ligue 1
 
 app.get("/matches", async (req, res) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
 
-    const response = await fetch(
-      `https://api.football-data.org/v4/matches?dateFrom=${today}&dateTo=${today}`,
-      {
-        headers: { "X-Auth-Token": API_KEY }
-      }
-    );
+    let allMatches = [];
 
-    const data = await response.json();
+    for (let code of leagues) {
 
-    const matches = (data.matches || [])
-      .filter(m => m.status === "SCHEDULED")
-      .map(m => ({
-        home: m.homeTeam.name,
-        away: m.awayTeam.name,
-        homeXG: 1.2 + Math.random()*1.2,
-        awayXG: 0.9 + Math.random()*1.0
-      }));
+      const response = await fetch(
+        `https://api.football-data.org/v4/competitions/${code}/matches?status=SCHEDULED`,
+        { headers: { "X-Auth-Token": API_KEY } }
+      );
 
-    res.json(matches);
+      const data = await response.json();
 
-  } catch (err) {
-    console.log(err);
+      if (!data.matches) continue;
+
+      data.matches.forEach(m => {
+
+        allMatches.push({
+          home: m.homeTeam.name,
+          away: m.awayTeam.name,
+          homeXG: 1.2 + Math.random()*1.2,
+          awayXG: 0.9 + Math.random()*1.0
+        });
+
+      });
+    }
+
+    res.json(allMatches);
+
+  } catch (e) {
     res.json([]);
   }
 });
