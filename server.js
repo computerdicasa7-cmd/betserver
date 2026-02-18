@@ -1,6 +1,7 @@
 const express = require("express");
-
+const cors = require("cors");
 const app = express();
+app.use(cors());
 const PORT = process.env.PORT || 10000;
 
 const API_KEY = process.env.FOOTBALL_API_KEY;
@@ -43,4 +44,5 @@ app.get("/matches", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log("Server avviato"));
+
 
